@@ -9,10 +9,14 @@ local function processor(key_event, env)
         return 2
     end
 
-    if context:select(1) then
+    -- CUSTOM Begin
+    -- if context:select(1) then
+    if context:select(2) then
+    -- CUSTOM End
         context:commit()
         return 1
     end
+
 
     if not env.engine.context:get_selected_candidate() then
         context:clear()

@@ -45,6 +45,17 @@ local function topup(env)
     end
 end
 
+-- CUSTOM BEGIN
+local SMART_KEY = "semicolon"
+local function topup2(env)
+    if env.engine.context:select(1) then
+        env.engine.context:commit()
+        return true
+    end
+    return false
+end
+-- CUSTOM END
+
 local function processor(key_event, env)
     local engine = env.engine
     local schema = engine.schema
@@ -61,6 +72,12 @@ local function processor(key_event, env)
     if key_event:release() or key_event:ctrl() or key_event:alt() then
         return 2
     end
+
+    -- CUSTOM BEGIN
+    if key_event:repr() == SMART_KEY and input_len >= 1 and topup2(env) then
+        return 1
+    end
+    -- CUSTOM END
 
     local ch = key_event.keycode
 
@@ -81,7 +98,7 @@ local function processor(key_event, env)
     local is_first_topup = env.topup_set[first] or false
 
 
-    if env.topup_command and is_first_topup then
+    if env.topup_comm  and is_first_topup then
         return 2
     end
 
